@@ -9,6 +9,7 @@ let decodeMode = undefined;
 const decodeModePicture = 0;
 const decodeModeCamera = 1;
 let input;
+let decordedText = '';
 
 function preload() {
   (async () => {
@@ -28,27 +29,58 @@ function setup() {
   strokeWeight(3);
 
   textFont('Noto Sans JP');
-  textAlign(LEFT, CENTER);
+  textAlign(LEFT, TOP);
+  textSize(30);
   textWrap(CHAR);
-
+  imageMode(CENTER);
   input = createFileInput(handleFile);
   input.position((15 * height) / 20, height / 3.5);
   input.style('display', 'none');
 }
+var irotate = 0;
 
 function draw() {
   background(220);
-  if (tessWorker) {
-    if (gImg) {
-      image(gImg, 0, 0, gImg.width, gImg.height);
+  if (tessWorker && gImg) {
+    if (gImg.height > gImg.width) {
+      // Portrait
+      const imageHeight = min(gImg.height, height / 2);
+      const imageWidth = (1.5 * gImg.width * imageHeight) / gImg.height;
+      image(gImg, 0, 0, imageWidth, imageHeight);
+      // ⭐imple
+    } else if (gImg.width > gImg.height) {
+      // Landscape
+      let imageWidth = min(gImg.width, width);
+      let imageHeight = (gImg.height * imageWidth) / gImg.width;
+
+      if (imageHeight > height / 2) {
+        imageWidth = (imageWidth * height) / 2 / imageHeight;
+        imageHeight = height / 2;
+      }
+
+      push();
+      translate(width / 2, height / 4);
+      rotate(map(mouseX, 0, width, -PI, PI));
+      scale(map(mouseY, 0, height, 0.5, 3.0));
+      image(gImg, 0, 0, imageWidth, imageHeight);
+      pop();
     }
   }
 
   if (decodeMode === undefined) {
     drawModeSelector();
+  } else {
+    rect(-20, height / 2, width + 20, height / 2 + 20);
+    text(decordedText, width / 10, height / 2 + height / 10);
   }
 }
-
+function keyPressed() {
+  if (key == 'r') {
+    irotate += 5;
+  } else if (key == 'w') {
+    irotate -= 5;
+  }
+}
 const drawModeSelector = () => {
   push();
   {
@@ -89,7 +121,8 @@ function handleFile(file) {
 
     (async () => {
       const ret = await tessWorker.recognize(gImg.elt);
-      console.log(ret.data.text);
+      decordedText = hiraToKana(ret.data.text);
+      // console.log(decordedText);
     })();
   }
 }
@@ -98,9 +131,16 @@ function mouseClicked() {
   if (decodeMode === undefined) {
     if (mouseY > (12 * height) / 20) {
       input.elt.click();
-      
-    }else if(mouseY > (3 * height) / 20){
-      decodeMode = decodeModeCamera;
+    } else if (mouseY > (3 * height) / 20) {
+      // decodeMode = decodeModeCamera;
     }
   }
+}
+
+// https://qiita.com/mimoe/items/855c112625d39b066c9a
+function hiraToKana(str) {
+  return str.replace(/[\u3041-\u3096]/g, function (match) {
+    var chr = match.charCodeAt(0) + 0x60;
+    return String.fromCharCode(chr);
+  });
 }
