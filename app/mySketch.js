@@ -52,10 +52,7 @@ function handleFile(file) {
   image(gImg, 0, 0, width, height);
 
   (async () => {
-    // const ret = await tessWorker.recognize('./sample/20240801-002.png');
-    // const ret = await tessWorker.recognize('./sample/20240731_093859.png');
     const ret = await tessWorker.recognize(gImg.elt);
     console.log(ret.data.text);
-    // await tessWorker.terminate();
   })();
 }
