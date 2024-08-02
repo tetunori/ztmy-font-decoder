@@ -1,7 +1,9 @@
-// Options
-// const gOptions = {
-//   numMarks: 2,
-// };
+const gOptions = {
+  xTranslate: 0,
+  yTranslate: 0,
+  scale: 1.0,
+  rotate: 0,
+};
 
 let tessWorker = undefined;
 let gImg;
@@ -10,6 +12,7 @@ const decodeModePicture = 0;
 const decodeModeCamera = 1;
 let input;
 let decordedText = '';
+let isDecoding = false;
 
 function preload() {
   (async () => {
@@ -21,16 +24,16 @@ function preload() {
 }
 
 function setup() {
-  // Prepare GUI
-  // prepareDatGUI(gOptions);
-
   createCanvas(windowWidth, windowHeight).drop(handleFile);
+  // Prepare GUI
+  prepareDatGUI(gOptions);
 
   strokeWeight(3);
+  angleMode(DEGREES);
 
   textFont('Noto Sans JP');
   textAlign(LEFT, TOP);
-  textSize(30);
+  textSize(height / 30);
   textWrap(CHAR);
   imageMode(CENTER);
   input = createFileInput(handleFile);
@@ -59,9 +62,9 @@ function draw() {
       }
 
       push();
-      translate(width / 2, height / 4);
-      rotate(map(mouseX, 0, width, -PI, PI));
-      scale(map(mouseY, 0, height, 0.5, 3.0));
+      translate(width / 2 + options.xTranslate, height / 4 + options.yTranslate);
+      rotate(options.rotate);
+      scale(options.scale);
       image(gImg, 0, 0, imageWidth, imageHeight);
       pop();
     }
@@ -71,7 +74,19 @@ function draw() {
     drawModeSelector();
   } else {
     rect(-20, height / 2, width + 20, height / 2 + 20);
-    text(decordedText, width / 10, height / 2 + height / 10);
+    if (isDecoding) {
+      push();
+      textAlign(CENTER, CENTER);
+      textSize(width / 10);
+      text(
+        String.fromCodePoint(0x1f311 + (floor(frameCount / 5) % 8)),
+        width / 2,
+        (3 * height) / 4
+      );
+      pop();
+    } else {
+      text(decordedText, width / 10, height / 2 + height / 10);
+    }
   }
 }
 function keyPressed() {
@@ -119,11 +134,7 @@ function handleFile(file) {
     // Draw the image.
     image(gImg, 0, 0, width, height);
 
-    (async () => {
-      const ret = await tessWorker.recognize(gImg.elt);
-      decordedText = hiraToKana(ret.data.text);
-      // console.log(decordedText);
-    })();
+    decode(gImg.elt);
   }
 }
 
@@ -144,3 +155,31 @@ function hiraToKana(str) {
     return String.fromCharCode(chr);
   });
 }
+
+const decode = (target = undefined) => {
+  // (async () => {
+  //   isDecoding = true;
+  //   const ret = await tessWorker.recognize(gImg.elt);
+  //   isDecoding = false;
+  //   decordedText = hiraToKana(ret.data.text);
+  //   // console.log(decordedText);
+  // })();
+  (async () => {
+    isDecoding = true;
+    let decordTarget;
+    if (target) {
+      decordTarget = target;
+    } else {
+      const gfx = createGraphics(width, height / 2);
+      gfx.image(get(), 0, 0);
+      console.log(gfx);
+
+      decordTarget = gfx.elt;
+    }
+    const ret = await tessWorker.recognize(decordTarget);
+
+    isDecoding = false;
+    decordedText = hiraToKana(ret.data.text);
+    // console.log(decordedText);
+  })();
+};
