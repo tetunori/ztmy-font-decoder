@@ -9,6 +9,9 @@ const utilities = {
   Decode: () => {
     decode();
   },
+  Reset: () => {
+    initializeSettings();
+  },
   GitHub: () => {
     window.open('https://github.com/tetunori/ztmy-font-decoder', '_blank');
   },
@@ -32,6 +35,7 @@ const prepareDatGUI = (opt) => {
   optionFolder.open();
 
   gui.add(utilities, 'Decode').name('解読');
+  gui.add(utilities, 'Reset').name('設定リセット');
 	
 	gui.close();
 

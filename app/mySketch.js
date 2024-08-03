@@ -13,6 +13,9 @@ const decodeModeCamera = 1;
 let input;
 let decordedText = '';
 let isDecoding = false;
+let isDrawingFrame = false;
+let frameInfo = undefined;
+let displayImageInfo = undefined;
 
 function preload() {
   (async () => {
@@ -33,7 +36,7 @@ function setup() {
 
   textFont('Noto Sans JP');
   textAlign(LEFT, TOP);
-  textSize(height / 30);
+  textSize(width / 20);
   textWrap(CHAR);
   imageMode(CENTER);
   input = createFileInput(handleFile);
@@ -67,6 +70,14 @@ function draw() {
       scale(options.scale);
       image(gImg, 0, 0, imageWidth, imageHeight);
       pop();
+
+      displayImageInfo = {
+        x: width / 2 - imageWidth / 2,
+        y: height / 4 - imageHeight / 2,
+        w: imageWidth,
+        h: imageHeight,
+      };
+      // console.log(displayImageInfo)
     }
   }
 
@@ -86,6 +97,13 @@ function draw() {
       pop();
     } else {
       text(decordedText, width / 10, height / 2 + height / 10);
+    }
+    if (frameInfo) {
+      drawFrame();
+          const targetRegionRect = getRegionRect();
+        //debug
+    // image(gImg, width/2, (3 * height) / 4, targetRegionRect.width, targetRegionRect.height, targetRegionRect.left, targetRegionRect.top, targetRegionRect.width, targetRegionRect.height);
+
     }
   }
 }
@@ -157,29 +175,79 @@ function hiraToKana(str) {
 }
 
 const decode = (target = undefined) => {
-  // (async () => {
-  //   isDecoding = true;
-  //   const ret = await tessWorker.recognize(gImg.elt);
-  //   isDecoding = false;
-  //   decordedText = hiraToKana(ret.data.text);
-  //   // console.log(decordedText);
-  // })();
   (async () => {
     isDecoding = true;
-    let decordTarget;
-    if (target) {
-      decordTarget = target;
-    } else {
-      const gfx = createGraphics(width, height / 2);
-      gfx.image(get(), 0, 0);
-      console.log(gfx);
-
-      decordTarget = gfx.elt;
-    }
-    const ret = await tessWorker.recognize(decordTarget);
+    const targetRegionRect = getRegionRect();
+    const ret = await tessWorker.recognize(gImg.elt, { rectangle: targetRegionRect });
 
     isDecoding = false;
     decordedText = hiraToKana(ret.data.text);
     // console.log(decordedText);
   })();
+  // (async () => {
+  //   isDecoding = true;
+  //   let decordTarget;
+  //   if (target) {
+  //     decordTarget = target;
+  //   } else {
+  //     const gfx = createGraphics(width, height / 2);
+  //     gfx.image(get(), 0, 0);
+  //     // console.log(gfx);
+
+  //     decordTarget = gfx.elt;
+  //   }
+  //   const ret = await tessWorker.recognize(decordTarget);
+
+  //   isDecoding = false;
+  //   decordedText = hiraToKana(ret.data.text);
+  //   // console.log(decordedText);
+  // })();
+};
+
+const getRegionRect = () => {
+  const retValue = { top: 0, left: 0, width: 0, height: 0 };
+
+  if (gImg && displayImageInfo) {
+    const imageRatio = displayImageInfo.w / gImg.width;
+    retValue.left = (frameInfo.x - displayImageInfo.x) / imageRatio;
+    retValue.top = (frameInfo.y - displayImageInfo.y) / imageRatio;
+    retValue.width = frameInfo.w / imageRatio;
+    retValue.height = frameInfo.h / imageRatio;
+
+    // console.log(frameInfo, retValue);
+
+    return retValue;
+  }
+};
+
+function touchStarted() {
+  // Init
+  frameInfo = { x: mouseX, y: mouseY, w: 0, h: 0 };
+  isDrawingFrame = true;
+}
+
+function touchEnded() {
+  frameInfo.w = mouseX - frameInfo.x;
+  frameInfo.h = mouseY - frameInfo.y;
+  isDrawingFrame = false;
+  decode();
+}
+
+const drawFrame = () => {
+  const fi = frameInfo;
+
+  push();
+  {
+    noFill();
+    strokeWeight(height / 200);
+    stroke('#a7c957');
+    if (isDrawingFrame) {
+      const fiwidth = mouseX - frameInfo.x;
+      const fiheight = mouseY - frameInfo.y;
+      rect(fi.x, fi.y, fiwidth, fiheight);
+    } else {
+      rect(fi.x, fi.y, fi.w, fi.h);
+    }
+  }
+  pop();
 };

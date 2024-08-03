@@ -2,10 +2,26 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, user-scalable=no, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
 
     <!-- Favion -->
     <link rel="icon" href="./favicon.ico" />
-    <script src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js'></script>
+
+    <script>
+      window.addEventListener(
+        'touchmove',
+        function (event) {
+          event.preventDefault();
+        },
+        { passive: false }
+      );
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <script src="libs/dat.gui.min.js"></script>
     <script src="libs/p5.js"></script>
     <script src="gui.js"></script>
