@@ -17,6 +17,8 @@ let isDrawingFrame = false;
 let frameInfo = undefined;
 let displayImageInfo = undefined;
 
+const thresholdVal = 0.12;
+
 function preload() {
   (async () => {
     tessWorker = await Tesseract.createWorker('ztmy', 0, {
@@ -30,13 +32,14 @@ function setup() {
   createCanvas(windowWidth, windowHeight).drop(handleFile);
   // Prepare GUI
   prepareDatGUI(gOptions);
+  pixelDensity(1);
 
   strokeWeight(3);
   angleMode(DEGREES);
 
   textFont('Noto Sans JP');
   textAlign(LEFT, TOP);
-  textSize(width / 20);
+  textSize(max(width, height) / 40);
   textWrap(CHAR);
   imageMode(CENTER);
   input = createFileInput(handleFile);
@@ -70,6 +73,7 @@ function draw() {
       scale(options.scale);
       image(gImg, 0, 0, imageWidth, imageHeight);
       pop();
+      // filter(THRESHOLD , thresholdVal);
 
       displayImageInfo = {
         x: width / 2 - imageWidth / 2,
@@ -100,10 +104,19 @@ function draw() {
     }
     if (frameInfo) {
       drawFrame();
-          const targetRegionRect = getRegionRect();
-        //debug
-    // image(gImg, width/2, (3 * height) / 4, targetRegionRect.width, targetRegionRect.height, targetRegionRect.left, targetRegionRect.top, targetRegionRect.width, targetRegionRect.height);
-
+      const targetRegionRect = getRegionRect();
+      //debug
+      // image(
+      //   gImg,
+      //   width / 2,
+      //   (3 * height) / 4,
+      //   targetRegionRect.width,
+      //   targetRegionRect.height,
+      //   targetRegionRect.left,
+      //   targetRegionRect.top,
+      //   targetRegionRect.width,
+      //   targetRegionRect.height
+      // );
     }
   }
 }
@@ -145,14 +158,21 @@ function handleFile(file) {
       gImg.remove();
     }
 
+    console.log(file);
     gImg = createImg(file.data, '');
+    //    console.log(gImg)
     gImg.hide();
     decodeMode = decodeModePicture;
 
     // Draw the image.
     image(gImg, 0, 0, width, height);
 
-    decode(gImg.elt);
+    const gpx = createGraphics(gImg.width, gImg.height);
+    gpx.image(gImg, 0, 0);
+    // gpx.filter(THRESHOLD , thresholdVal);
+    image(gpx, width / 2, (3 * height) / 4, gpx.width, gpx.height);
+
+    decode(gpx.elt);
   }
 }
 
@@ -178,7 +198,12 @@ const decode = (target = undefined) => {
   (async () => {
     isDecoding = true;
     const targetRegionRect = getRegionRect();
-    const ret = await tessWorker.recognize(gImg.elt, { rectangle: targetRegionRect });
+
+    const gpx = createGraphics(gImg.width, gImg.height);
+    gpx.image(gImg, 0, 0);
+    // gpx.filter(THRESHOLD , thresholdVal);
+
+    const ret = await tessWorker.recognize(gpx.elt, { rectangle: targetRegionRect });
 
     isDecoding = false;
     decordedText = hiraToKana(ret.data.text);
@@ -221,16 +246,34 @@ const getRegionRect = () => {
 };
 
 function touchStarted() {
-  // Init
-  frameInfo = { x: mouseX, y: mouseY, w: 0, h: 0 };
-  isDrawingFrame = true;
+  if (decodeMode === decodeModePicture) {
+    // Init
+    frameInfo = { x: mouseX, y: mouseY, w: 0, h: 0 };
+    isDrawingFrame = true;
+  }
 }
 
 function touchEnded() {
-  frameInfo.w = mouseX - frameInfo.x;
-  frameInfo.h = mouseY - frameInfo.y;
-  isDrawingFrame = false;
-  decode();
+  if (isDrawingFrame) {
+    isDrawingFrame = false;
+    const fiwidth = mouseX - frameInfo.x;
+    const fiheight = mouseY - frameInfo.y;
+
+    if (abs(fiwidth) + abs(fiheight) > 20) {
+      frameInfo.w = abs(fiwidth);
+      frameInfo.h = abs(fiheight);
+
+      if(fiwidth < 0){
+        frameInfo.x = mouseX;
+      }
+
+      if(fiheight < 0){
+        frameInfo.y = mouseY;
+      }
+
+      decode();
+    }
+  }
 }
 
 const drawFrame = () => {
@@ -244,7 +287,9 @@ const drawFrame = () => {
     if (isDrawingFrame) {
       const fiwidth = mouseX - frameInfo.x;
       const fiheight = mouseY - frameInfo.y;
-      rect(fi.x, fi.y, fiwidth, fiheight);
+      if (abs(fiwidth) + abs(fiheight) > 20) {
+        rect(fi.x, fi.y, fiwidth, fiheight);
+      }
     } else {
       rect(fi.x, fi.y, fi.w, fi.h);
     }
