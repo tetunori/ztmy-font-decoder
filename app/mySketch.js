@@ -8,6 +8,7 @@ let gImg;
 let decodeMode = undefined;
 const decodeModePicture = 0;
 const decodeModeCamera = 1;
+
 let input;
 let decordedText = '';
 let isDecoding = false;
@@ -44,93 +45,91 @@ function setup() {
   input.position((15 * height) / 20, height / 3.5);
   input.style('display', 'none');
 }
-var irotate = 0;
 
 function draw() {
   background(220);
-  if (tessWorker && gImg) {
+
+  if (decodeMode === undefined) {
+    drawModeSelector();
+  } else {
+    // Draw upper half of screen
+    if (decodeMode === decodeModePicture) {
+      drawTargetPicture();
+    } else if (decodeMode === decodeModePicture) {
+      // to be implemented...
+      // drawVideoCapture
+    }
+    drawFrame();
+
+    // Draw lower half of screen
+    drawDecordTextRegion();
+    drawHomeButton();
+  }
+}
+
+const drawTargetPicture = () => {
+  if (gImg) {
+    let imageWidth;
+    let imageHeight;
     if (gImg.height > gImg.width) {
       // Portrait
-      const imageHeight = min(gImg.height, height / 2);
-      const imageWidth = (1.5 * gImg.width * imageHeight) / gImg.height;
-      image(gImg, 0, 0, imageWidth, imageHeight);
-      // ⭐imple
-    } else if (gImg.width > gImg.height) {
+      imageHeight = min(gImg.height, height / 2);
+      imageWidth = (gImg.width * imageHeight) / gImg.height;
+
+      if (imageWidth > width) {
+        imageHeight = (imageHeight * width) / imageWidth;
+        imageWidth = width;
+      }
+    } else {
       // Landscape
-      let imageWidth = min(gImg.width, width);
-      let imageHeight = (gImg.height * imageWidth) / gImg.width;
+      imageWidth = min(gImg.width, width);
+      imageHeight = (gImg.height * imageWidth) / gImg.width;
 
       if (imageHeight > height / 2) {
         imageWidth = (imageWidth * height) / 2 / imageHeight;
         imageHeight = height / 2;
       }
-
-      push();
-      translate(width / 2, height / 4);
-      image(gImg, 0, 0, imageWidth, imageHeight);
-      pop();
-      if (options.enableFilter) {
-        filter(THRESHOLD, options.threshold);
-      }
-
-      displayImageInfo = {
-        x: width / 2 - imageWidth / 2,
-        y: height / 4 - imageHeight / 2,
-        w: imageWidth,
-        h: imageHeight,
-      };
-      // console.log(displayImageInfo)
     }
-  }
+    // console.log(imageHeight,gImg.height, height/2)
 
-  if (decodeMode === undefined) {
-    drawModeSelector();
+    push();
+    translate(width / 2, height / 4);
+    image(gImg, 0, 0, imageWidth, imageHeight);
+    pop();
+    if (options.enableFilter) {
+      filter(THRESHOLD, options.threshold);
+    }
+
+    displayImageInfo = {
+      x: width / 2 - imageWidth / 2,
+      y: height / 4 - imageHeight / 2,
+      w: imageWidth,
+      h: imageHeight,
+    };
+    // console.log(displayImageInfo)
+  }
+};
+
+const drawDecordTextRegion = () => {
+  rect(-20, height / 2, width + 20, height / 2 + 20);
+  if (isDecoding) {
+    push();
+    textAlign(CENTER, CENTER);
+    textSize(width / 10);
+    text(String.fromCodePoint(0x1f311 + (floor(frameCount / 5) % 8)), width / 2, (3 * height) / 4);
+    pop();
   } else {
-    rect(-20, height / 2, width + 20, height / 2 + 20);
-    if (isDecoding) {
-      push();
-      textAlign(CENTER, CENTER);
-      textSize(width / 10);
-      text(
-        String.fromCodePoint(0x1f311 + (floor(frameCount / 5) % 8)),
-        width / 2,
-        (3 * height) / 4
-      );
-      pop();
-    } else {
-      text(decordedText, width / 10, height / 2 + height / 10);
-    }
-
-    drawFrame();
-    if (frameInfo) {
-      const targetRegionRect = getRegionRect();
-      //debug
-      // image(
-      //   gImg,
-      //   width / 2,
-      //   (3 * height) / 4,
-      //   targetRegionRect.width,
-      //   targetRegionRect.height,
-      //   targetRegionRect.left,
-      //   targetRegionRect.top,
-      //   targetRegionRect.width,
-      //   targetRegionRect.height
-      // );
-    }
+    text(decordedText, width / 10, height / 2 + height / 10);
   }
-
-  if(decodeMode !== undefined){
-    drawHomeButton();
-  }
-}
+};
 
 const drawHomeButton = () => {
-  push()
-  textAlign(CENTER, CENTER)
-  textSize(50)
-  text('🏠', width/20, height - width/20)
-  pop()
-}
+  push();
+  textAlign(CENTER, CENTER);
+  textSize(50);
+  text('🏠', width / 20, height - width / 20);
+  pop();
+};
 
 const drawModeSelector = () => {
   push();
@@ -164,22 +163,21 @@ function handleFile(file) {
     }
 
     console.log(file);
-    gImg = createImg(file.data, '');
-    //    console.log(gImg)
-    gImg.hide();
-    decodeMode = decodeModePicture;
+    createImg(file.data, '', '', (img) => {
+      gImg = img;
+      //    console.log(gImg)
+      gImg.hide();
+      decodeMode = decodeModePicture;
 
-    // Draw the image.
-    image(gImg, 0, 0, width, height);
+      const gpx = createGraphics(gImg.width, gImg.height);
+      gpx.image(gImg, 0, 0);
+      if (options.enableFilter) {
+        filter(THRESHOLD, options.threshold);
+      }
+      image(gpx, width / 2, (3 * height) / 4, gpx.width, gpx.height);
 
-    const gpx = createGraphics(gImg.width, gImg.height);
-    gpx.image(gImg, 0, 0);
-    if (options.enableFilter) {
-      filter(THRESHOLD, options.threshold);
-    }
-    image(gpx, width / 2, (3 * height) / 4, gpx.width, gpx.height);
-
-    decode(gpx.elt);
+      decode(gpx.elt);
+    });
   }
 }
 
@@ -190,8 +188,8 @@ function mouseClicked() {
     } else if (mouseY > (3 * height) / 20) {
       // decodeMode = decodeModeCamera;
     }
-  }else{
-    if(dist(width/20, height - width/20, mouseX, mouseY) < width/40){
+  } else {
+    if (dist(width / 20, height - width / 20, mouseX, mouseY) < width / 40) {
       decodeMode = undefined;
     }
   }
@@ -213,7 +211,7 @@ const decode = (target = undefined) => {
     const gpx = createGraphics(gImg.width, gImg.height);
     gpx.image(gImg, 0, 0);
 
-    let recogTarget = gImg
+    let recogTarget = gImg;
     if (options.enableFilter) {
       gpx.filter(THRESHOLD, options.threshold);
       recogTarget = gpx;
@@ -224,24 +222,6 @@ const decode = (target = undefined) => {
     decordedText = hiraToKana(ret.data.text);
     // console.log(decordedText);
   })();
-  // (async () => {
-  //   isDecoding = true;
-  //   let decordTarget;
-  //   if (target) {
-  //     decordTarget = target;
-  //   } else {
-  //     const gfx = createGraphics(width, height / 2);
-  //     gfx.image(get(), 0, 0);
-  //     // console.log(gfx);
-
-  //     decordTarget = gfx.elt;
-  //   }
-  //   const ret = await tessWorker.recognize(decordTarget);
-
-  //   isDecoding = false;
-  //   decordedText = hiraToKana(ret.data.text);
-  //   // console.log(decordedText);
-  // })();
 };
 
 const getRegionRect = () => {
@@ -289,13 +269,28 @@ function touchEnded() {
       }
 
       decode();
-    }else{
+    } else {
       frameInfoCandidate = undefined;
     }
   }
 }
 
 const drawFrame = () => {
+  if (frameInfo) {
+    const targetRegionRect = getRegionRect();
+    //debug
+    // image(
+    //   gImg,
+    //   width / 2,
+    //   (3 * height) / 4,
+    //   targetRegionRect.width,
+    //   targetRegionRect.height,
+    //   targetRegionRect.left,
+    //   targetRegionRect.top,
+    //   targetRegionRect.width,
+    //   targetRegionRect.height
+    // );
+  }
 
   push();
   {
@@ -310,9 +305,8 @@ const drawFrame = () => {
       }
     } else {
       const fi = frameInfo;
-      if(fi){
-      rect(fi.x, fi.y, fi.w, fi.h);
-
+      if (fi) {
+        rect(fi.x, fi.y, fi.w, fi.h);
       }
     }
   }
