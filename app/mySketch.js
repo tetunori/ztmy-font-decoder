@@ -118,14 +118,20 @@ function draw() {
       // );
     }
   }
-}
-function keyPressed() {
-  if (key == 'r') {
-    irotate += 5;
-  } else if (key == 'w') {
-    irotate -= 5;
+
+  if(decodeMode !== undefined){
+    drawHomeButton();
   }
 }
+
+const drawHomeButton = () => {
+  push()
+  textAlign(CENTER, CENTER)
+  textSize(50)
+  text('🏠', width/20, height - width/20)
+  pop()
+}
+
 const drawModeSelector = () => {
   push();
   {
@@ -183,6 +189,10 @@ function mouseClicked() {
       input.elt.click();
     } else if (mouseY > (3 * height) / 20) {
       // decodeMode = decodeModeCamera;
+    }
+  }else{
+    if(dist(width/20, height - width/20, mouseX, mouseY) < width/40){
+      decodeMode = undefined;
     }
   }
 }
