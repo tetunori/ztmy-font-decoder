@@ -6,9 +6,6 @@ const DefaultOptions = {};
 const options = new Object();
 
 const utilities = {
-  Decode: () => {
-    decode();
-  },
   Reset: () => {
     initializeSettings();
   },
@@ -22,19 +19,14 @@ const prepareDatGUI = (opt) => {
   const optionFolder = gui.addFolder('Options');
 
   // Set initial values
-  DefaultOptions.xTranslate = opt.xTranslate;
-  DefaultOptions.yTranslate = opt.yTranslate;
-  DefaultOptions.scale = opt.scale;
-  DefaultOptions.rotate = opt.rotate;
+  DefaultOptions.enableFilter = opt.enableFilter;
+  DefaultOptions.threshold = opt.threshold;
   initializeSettings();
 
-  optionFolder.add(options, 'xTranslate', -3*width, 3*width, 1);
-  optionFolder.add(options, 'yTranslate', -3*height, 3*height, 1);
-  optionFolder.add(options, 'scale', 0.1, 10.0, 0.1);
-  optionFolder.add(options, 'rotate', -180, 180, 1 );
+  optionFolder.add(options, 'enableFilter', false).name('画像にフィルターをかける');
+  optionFolder.add(options, 'threshold', 0.00, 1.00, 0.01).name('黒/白 しきい値');
   optionFolder.open();
 
-  gui.add(utilities, 'Decode').name('解読');
   gui.add(utilities, 'Reset').name('設定リセット');
 	
 	gui.close();
@@ -43,9 +35,7 @@ const prepareDatGUI = (opt) => {
 
 // Initialize with default values
 const initializeSettings = () => {
-  options.xTranslate = DefaultOptions.xTranslate;
-  options.yTranslate = DefaultOptions.yTranslate;
-  options.scale = DefaultOptions.scale;
-  options.rotate = DefaultOptions.rotate;
+  options.enableFilter = DefaultOptions.enableFilter;
+  options.threshold = DefaultOptions.threshold;
   gui.updateDisplay();
 };

@@ -1,8 +1,6 @@
 const gOptions = {
-  xTranslate: 0,
-  yTranslate: 0,
-  scale: 1.0,
-  rotate: 0,
+  enableFilter: false,
+  threshold: 0.12,
 };
 
 let tessWorker = undefined;
@@ -68,12 +66,12 @@ function draw() {
       }
 
       push();
-      translate(width / 2 + options.xTranslate, height / 4 + options.yTranslate);
-      rotate(options.rotate);
-      scale(options.scale);
+      translate(width / 2, height / 4);
       image(gImg, 0, 0, imageWidth, imageHeight);
       pop();
-      // filter(THRESHOLD , thresholdVal);
+      if (options.enableFilter) {
+        filter(THRESHOLD, options.threshold);
+      }
 
       displayImageInfo = {
         x: width / 2 - imageWidth / 2,
@@ -169,7 +167,9 @@ function handleFile(file) {
 
     const gpx = createGraphics(gImg.width, gImg.height);
     gpx.image(gImg, 0, 0);
-    // gpx.filter(THRESHOLD , thresholdVal);
+    if (options.enableFilter) {
+      filter(THRESHOLD, options.threshold);
+    }
     image(gpx, width / 2, (3 * height) / 4, gpx.width, gpx.height);
 
     decode(gpx.elt);
@@ -201,9 +201,13 @@ const decode = (target = undefined) => {
 
     const gpx = createGraphics(gImg.width, gImg.height);
     gpx.image(gImg, 0, 0);
-    // gpx.filter(THRESHOLD , thresholdVal);
 
-    const ret = await tessWorker.recognize(gpx.elt, { rectangle: targetRegionRect });
+    let recogTarget = gImg
+    if (options.enableFilter) {
+      gpx.filter(THRESHOLD, options.threshold);
+      recogTarget = gpx;
+    }
+    const ret = await tessWorker.recognize(recogTarget.elt, { rectangle: targetRegionRect });
 
     isDecoding = false;
     decordedText = hiraToKana(ret.data.text);
@@ -263,11 +267,11 @@ function touchEnded() {
       frameInfo.w = abs(fiwidth);
       frameInfo.h = abs(fiheight);
 
-      if(fiwidth < 0){
+      if (fiwidth < 0) {
         frameInfo.x = mouseX;
       }
 
-      if(fiheight < 0){
+      if (fiheight < 0) {
         frameInfo.y = mouseY;
       }
 
