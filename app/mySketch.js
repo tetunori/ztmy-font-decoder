@@ -100,8 +100,9 @@ function draw() {
     } else {
       text(decordedText, width / 10, height / 2 + height / 10);
     }
+
+    drawFrame();
     if (frameInfo) {
-      drawFrame();
       const targetRegionRect = getRegionRect();
       //debug
       // image(
@@ -130,7 +131,7 @@ const drawModeSelector = () => {
   {
     textAlign(CENTER, CENTER);
     textSize(height / 23);
-    text("'ZTMY Font' Decorder", width / 2, height / 13);
+    text("🦔 'ZTMY Font' Decorder 🦔", width / 2, height / 13);
 
     rectMode(CENTER);
     strokeCap(ROUND);
@@ -249,10 +250,11 @@ const getRegionRect = () => {
   }
 };
 
+let frameInfoCandidate;
 function touchStarted() {
   if (decodeMode === decodeModePicture) {
     // Init
-    frameInfo = { x: mouseX, y: mouseY, w: 0, h: 0 };
+    frameInfoCandidate = { x: mouseX, y: mouseY, w: 0, h: 0 };
     isDrawingFrame = true;
   }
 }
@@ -260,10 +262,11 @@ function touchStarted() {
 function touchEnded() {
   if (isDrawingFrame) {
     isDrawingFrame = false;
-    const fiwidth = mouseX - frameInfo.x;
-    const fiheight = mouseY - frameInfo.y;
+    const fiwidth = mouseX - frameInfoCandidate.x;
+    const fiheight = mouseY - frameInfoCandidate.y;
 
     if (abs(fiwidth) + abs(fiheight) > 20) {
+      frameInfo = { x: frameInfoCandidate.x, y: frameInfoCandidate.y, w: 0, h: 0 };
       frameInfo.w = abs(fiwidth);
       frameInfo.h = abs(fiheight);
 
@@ -276,12 +279,13 @@ function touchEnded() {
       }
 
       decode();
+    }else{
+      frameInfoCandidate = undefined;
     }
   }
 }
 
 const drawFrame = () => {
-  const fi = frameInfo;
 
   push();
   {
@@ -289,13 +293,17 @@ const drawFrame = () => {
     strokeWeight(height / 200);
     stroke('#a7c957');
     if (isDrawingFrame) {
-      const fiwidth = mouseX - frameInfo.x;
-      const fiheight = mouseY - frameInfo.y;
+      const fiwidth = mouseX - frameInfoCandidate.x;
+      const fiheight = mouseY - frameInfoCandidate.y;
       if (abs(fiwidth) + abs(fiheight) > 20) {
-        rect(fi.x, fi.y, fiwidth, fiheight);
+        rect(frameInfoCandidate.x, frameInfoCandidate.y, fiwidth, fiheight);
       }
     } else {
+      const fi = frameInfo;
+      if(fi){
       rect(fi.x, fi.y, fi.w, fi.h);
+
+      }
     }
   }
   pop();

@@ -23,11 +23,12 @@ const prepareDatGUI = (opt) => {
   DefaultOptions.threshold = opt.threshold;
   initializeSettings();
 
-  optionFolder.add(options, 'enableFilter', false).name('画像にフィルターをかける');
+  optionFolder.add(options, 'enableFilter', false).name('画像フィルター');
   optionFolder.add(options, 'threshold', 0.00, 1.00, 0.01).name('黒/白 しきい値');
   optionFolder.open();
 
-  gui.add(utilities, 'Reset').name('設定リセット');
+  gui.add(utilities, 'Reset').name('設定リセット 🐱');
+  gui.add(utilities, 'GitHub').name('GitHub 🔗');
 	
 	gui.close();
 
