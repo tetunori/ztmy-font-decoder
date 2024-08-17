@@ -5,6 +5,7 @@ const gOptions = {
 
 let tessWorker = undefined;
 let gImg;
+let gCapture;
 let decodeMode = undefined;
 const decodeModePicture = 0;
 const decodeModeCamera = 1;
@@ -55,9 +56,9 @@ function draw() {
     // Draw upper half of screen
     if (decodeMode === decodeModePicture) {
       drawTargetPicture();
-    } else if (decodeMode === decodeModePicture) {
-      // to be implemented...
-      // drawVideoCapture
+    } else if (decodeMode === decodeModeCamera) {
+      drawVideoCapture();
+      drawGuideLine();
     }
     drawFrame();
 
@@ -69,6 +70,51 @@ function draw() {
 
 const drawTargetPicture = () => {
   if (gImg) {
+    let imageWidth;
+    let imageHeight;
+    if (gImg.height > gImg.width) {
+      // Portrait
+      imageHeight = min(gImg.height, height / 2);
+      imageWidth = (gImg.width * imageHeight) / gImg.height;
+
+      if (imageWidth > width) {
+        imageHeight = (imageHeight * width) / imageWidth;
+        imageWidth = width;
+      }
+    } else {
+      // Landscape
+      imageWidth = min(gImg.width, width);
+      imageHeight = (gImg.height * imageWidth) / gImg.width;
+
+      if (imageHeight > height / 2) {
+        imageWidth = (imageWidth * height) / 2 / imageHeight;
+        imageHeight = height / 2;
+      }
+    }
+    // console.log(imageHeight,gImg.height, height/2)
+
+    push();
+    translate(width / 2, height / 4);
+    image(gImg, 0, 0, imageWidth, imageHeight);
+    pop();
+    if (options.enableFilter) {
+      filter(THRESHOLD, options.threshold);
+    }
+
+    displayImageInfo = {
+      x: width / 2 - imageWidth / 2,
+      y: height / 4 - imageHeight / 2,
+      w: imageWidth,
+      h: imageHeight,
+    };
+    // console.log(displayImageInfo)
+  }
+};
+
+const drawVideoCapture = () => {
+  if (gCapture) {
+    gImg = gCapture;
+
     let imageWidth;
     let imageHeight;
     if (gImg.height > gImg.width) {
@@ -186,7 +232,15 @@ function mouseClicked() {
     if (mouseY > (12 * height) / 20) {
       input.elt.click();
     } else if (mouseY > (3 * height) / 20) {
-      // decodeMode = decodeModeCamera;
+      decodeMode = decodeModeCamera;
+      const constraints = {
+        video: {
+          facingMode: 'environment',
+        },
+        audio: false,
+      };
+      gCapture = createCapture(constraints);
+      gCapture.hide();
     }
   } else {
     if (dist(width / 20, height - width / 20, mouseX, mouseY) < width / 40) {
@@ -211,12 +265,18 @@ const decode = (target = undefined) => {
     const gpx = createGraphics(gImg.width, gImg.height);
     gpx.image(gImg, 0, 0);
 
-    let recogTarget = gImg;
+    let recogTarget;
+
     if (options.enableFilter) {
       gpx.filter(THRESHOLD, options.threshold);
-      recogTarget = gpx;
+      recogTarget = gpx.elt;
+    }else if(decodeMode === decodeModeCamera){
+      recogTarget = gImg.canvas;
+    }else{
+      recogTarget = gImg.elt;
     }
-    const ret = await tessWorker.recognize(recogTarget.elt, { rectangle: targetRegionRect });
+
+    const ret = await tessWorker.recognize(recogTarget, { rectangle: targetRegionRect });
 
     isDecoding = false;
     decordedText = hiraToKana(ret.data.text);
@@ -242,7 +302,7 @@ const getRegionRect = () => {
 
 let frameInfoCandidate;
 function touchStarted() {
-  if (decodeMode === decodeModePicture) {
+  if (decodeMode !== undefined) {
     // Init
     frameInfoCandidate = { x: mouseX, y: mouseY, w: 0, h: 0 };
     isDrawingFrame = true;
@@ -312,3 +372,16 @@ const drawFrame = () => {
   }
   pop();
 };
+
+const drawGuideLine = () => {
+  push();
+  {
+    strokeWeight(2);
+    stroke('#FFFFFFA0');
+
+    line(width/2, 0, width/2, height/2 );
+    line(0, height/4, width, height/4);
+
+  }
+  pop();
+}
