@@ -173,7 +173,7 @@ const drawHomeButton = () => {
   push();
   textAlign(CENTER, CENTER);
   textSize(50);
-  text('🏠', width / 20, height - width / 20);
+  text('🏠', 50, height - 50);
   pop();
 };
 
@@ -243,7 +243,7 @@ function mouseClicked() {
       gCapture.hide();
     }
   } else {
-    if (dist(width / 20, height - width / 20, mouseX, mouseY) < width / 40) {
+    if (dist(50, height - 50, mouseX, mouseY) < 50) {
       decodeMode = undefined;
     }
   }
