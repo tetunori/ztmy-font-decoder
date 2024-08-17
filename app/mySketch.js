@@ -270,9 +270,9 @@ const decode = (target = undefined) => {
     if (options.enableFilter) {
       gpx.filter(THRESHOLD, options.threshold);
       recogTarget = gpx.elt;
-    }else if(decodeMode === decodeModeCamera){
+    } else if (decodeMode === decodeModeCamera) {
       recogTarget = gImg.canvas;
-    }else{
+    } else {
       recogTarget = gImg.elt;
     }
 
@@ -303,17 +303,21 @@ const getRegionRect = () => {
 let frameInfoCandidate;
 function touchStarted() {
   if (decodeMode !== undefined) {
-    // Init
-    frameInfoCandidate = { x: mouseX, y: mouseY, w: 0, h: 0 };
-    isDrawingFrame = true;
+    if (mouseY < height / 2) {
+      // Init
+      frameInfoCandidate = { x: mouseX, y: mouseY, w: 0, h: 0 };
+      isDrawingFrame = true;
+    }
   }
 }
 
 function touchEnded() {
   if (isDrawingFrame) {
+    const constrainedMouseX = constrain(mouseX, 2, width - 3);
+    const constrainedMouseY = constrain(mouseY, 2, height / 2 - 3);
     isDrawingFrame = false;
-    const fiwidth = mouseX - frameInfoCandidate.x;
-    const fiheight = mouseY - frameInfoCandidate.y;
+    const fiwidth = constrainedMouseX - frameInfoCandidate.x;
+    const fiheight = constrainedMouseY - frameInfoCandidate.y;
 
     if (abs(fiwidth) + abs(fiheight) > 20) {
       frameInfo = { x: frameInfoCandidate.x, y: frameInfoCandidate.y, w: 0, h: 0 };
@@ -321,11 +325,11 @@ function touchEnded() {
       frameInfo.h = abs(fiheight);
 
       if (fiwidth < 0) {
-        frameInfo.x = mouseX;
+        frameInfo.x = constrainedMouseX;
       }
 
       if (fiheight < 0) {
-        frameInfo.y = mouseY;
+        frameInfo.y = constrainedMouseY;
       }
 
       decode();
@@ -358,8 +362,10 @@ const drawFrame = () => {
     strokeWeight(height / 200);
     stroke('#a7c957');
     if (isDrawingFrame) {
-      const fiwidth = mouseX - frameInfoCandidate.x;
-      const fiheight = mouseY - frameInfoCandidate.y;
+      const constrainedMouseX = constrain(mouseX, 2, width - 3);
+      const constrainedMouseY = constrain(mouseY, 2, height / 2 - 3);
+      const fiwidth = constrainedMouseX - frameInfoCandidate.x;
+      const fiheight = constrainedMouseY - frameInfoCandidate.y;
       if (abs(fiwidth) + abs(fiheight) > 20) {
         rect(frameInfoCandidate.x, frameInfoCandidate.y, fiwidth, fiheight);
       }
@@ -379,9 +385,8 @@ const drawGuideLine = () => {
     strokeWeight(2);
     stroke('#FFFFFFA0');
 
-    line(width/2, 0, width/2, height/2 );
-    line(0, height/4, width, height/4);
-
+    line(width / 2, 0, width / 2, height / 2);
+    line(0, height / 4, width, height / 4);
   }
   pop();
-}
+};
