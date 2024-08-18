@@ -29,6 +29,7 @@ const prepareDatGUI = (opt) => {
     .add(options, 'threshold', 0.0, 1.0, 0.01)
     .name('黒/白 しきい値')
     .onChange(() => {
+      isDrawingFrame = false;
       if (isClicking === false) {
         decode();
       }
