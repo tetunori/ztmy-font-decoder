@@ -16,6 +16,7 @@ let isDecoding = false;
 let isDrawingFrame = false;
 let frameInfo = undefined;
 let displayImageInfo = undefined;
+let isClicking = false;
 
 const thresholdVal = 0.12;
 
@@ -206,6 +207,8 @@ function handleFile(file) {
     // Remove the current image, if any.
     if (gImg) {
       gImg.remove();
+      frameInfo = undefined;
+      displayImageInfo = undefined;
     }
 
     console.log(file);
@@ -222,7 +225,7 @@ function handleFile(file) {
       }
       image(gpx, width / 2, (3 * height) / 4, gpx.width, gpx.height);
 
-      decode(gpx.elt);
+      decode();
     });
   }
 }
@@ -257,7 +260,7 @@ function hiraToKana(str) {
   });
 }
 
-const decode = (target = undefined) => {
+const decode = () => {
   (async () => {
     isDecoding = true;
     const targetRegionRect = getRegionRect();
@@ -276,7 +279,11 @@ const decode = (target = undefined) => {
       recogTarget = gImg.elt;
     }
 
-    const ret = await tessWorker.recognize(recogTarget, { rectangle: targetRegionRect });
+    let recogOptions = {};
+    if (targetRegionRect) {
+      recogOptions.rectangle = targetRegionRect;
+    }
+    const ret = await tessWorker.recognize(recogTarget, recogOptions);
 
     isDecoding = false;
     decordedText = hiraToKana(ret.data.text);
@@ -285,9 +292,8 @@ const decode = (target = undefined) => {
 };
 
 const getRegionRect = () => {
-  const retValue = { top: 0, left: 0, width: 0, height: 0 };
-
-  if (gImg && displayImageInfo) {
+  if (gImg && frameInfo && displayImageInfo) {
+    const retValue = {};
     const imageRatio = displayImageInfo.w / gImg.width;
     retValue.left = (frameInfo.x - displayImageInfo.x) / imageRatio;
     retValue.top = (frameInfo.y - displayImageInfo.y) / imageRatio;
@@ -295,13 +301,16 @@ const getRegionRect = () => {
     retValue.height = frameInfo.h / imageRatio;
 
     // console.log(frameInfo, retValue);
-
     return retValue;
+  } else {
+    return undefined;
   }
 };
 
 let frameInfoCandidate;
 function touchStarted() {
+    isClicking = true;
+
   if (decodeMode !== undefined) {
     if (mouseY < height / 2) {
       // Init
@@ -312,6 +321,8 @@ function touchStarted() {
 }
 
 function touchEnded() {
+    isClicking = false;
+
   if (isDrawingFrame) {
     const constrainedMouseX = constrain(mouseX, 2, width - 3);
     const constrainedMouseY = constrain(mouseY, 2, height / 2 - 3);
@@ -356,27 +367,36 @@ const drawFrame = () => {
     // );
   }
 
-  push();
-  {
-    noFill();
-    strokeWeight(height / 200);
-    stroke('#a7c957');
-    if (isDrawingFrame) {
+  if (frameInfoCandidate || frameInfo) {
+    push();
+    {
+      noFill();
+      strokeWeight(height / 200);
+      stroke('#a7c957');
       const constrainedMouseX = constrain(mouseX, 2, width - 3);
       const constrainedMouseY = constrain(mouseY, 2, height / 2 - 3);
-      const fiwidth = constrainedMouseX - frameInfoCandidate.x;
-      const fiheight = constrainedMouseY - frameInfoCandidate.y;
-      if (abs(fiwidth) + abs(fiheight) > 20) {
-        rect(frameInfoCandidate.x, frameInfoCandidate.y, fiwidth, fiheight);
-      }
-    } else {
-      const fi = frameInfo;
-      if (fi) {
-        rect(fi.x, fi.y, fi.w, fi.h);
+
+      if (isDrawingFrame && frameInfoCandidate) {
+        const fiwidth = constrainedMouseX - frameInfoCandidate.x;
+        const fiheight = constrainedMouseY - frameInfoCandidate.y;
+
+        if (abs(fiwidth) + abs(fiheight) > 20) {
+          rect(frameInfoCandidate.x, frameInfoCandidate.y, fiwidth, fiheight);
+        } else {
+          const fi = frameInfo;
+          if (fi) {
+            rect(fi.x, fi.y, fi.w, fi.h);
+          }
+        }
+      } else {
+        const fi = frameInfo;
+        if (fi) {
+          rect(fi.x, fi.y, fi.w, fi.h);
+        }
       }
     }
+    pop();
   }
-  pop();
 };
 
 const drawGuideLine = () => {
