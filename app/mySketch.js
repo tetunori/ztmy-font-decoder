@@ -20,6 +20,11 @@ let isClicking = false;
 
 const thresholdVal = 0.12;
 
+let fileFolderPict;
+let cameraPict;
+let housePict;
+let hedgehogPict;
+
 function preload() {
   (async () => {
     tessWorker = await Tesseract.createWorker('ztmy', 0, {
@@ -27,6 +32,17 @@ function preload() {
       gzip: false,
     });
   })();
+
+  // fileFolderPict = loadImage("./images/file_folder_color.svg");
+  fileFolderPict = loadImage("./images/file_folder_3d.png");
+  // cameraPict = loadImage("./images/camera_color.svg");
+  cameraPict = loadImage("./images/camera_3d.png");
+  // housePict = loadImage("./images/house_color.svg");
+  housePict = loadImage("./images/house_3d.png");
+  // hedgehogPict = loadImage("./images/hedgehog_color.svg");
+  hedgehogPict = loadImage("./images/hedgehog_3d.png");
+  chestnutPict = loadImage("./images/chestnut_3d.png");
+
 }
 
 function setup() {
@@ -174,7 +190,9 @@ const drawHomeButton = () => {
   push();
   textAlign(CENTER, CENTER);
   textSize(50);
-  text('🏠', 50, height - 50);
+  // text('🏠', 50, height - 50);
+  image(housePict, 50, height - 50, 50, 50 )
+
   pop();
 };
 
@@ -182,8 +200,10 @@ const drawModeSelector = () => {
   push();
   {
     textAlign(CENTER, CENTER);
-    textSize(height / 23);
-    text("🦔 'ZTMY Font' Decorder 🦔", width / 2, height / 13);
+    textSize(height / 25);
+    text("'ZTMY Font' Decorder", width / 2, height / 10);
+    image(hedgehogPict, width / 2 - height / 25 * 6.2, height / 10.4, height / 20, height / 20 )
+    image(hedgehogPict, width / 2 + height / 25 * 6.2, height / 10.4, height / 20, height / 20 )
 
     rectMode(CENTER);
     strokeCap(ROUND);
@@ -191,13 +211,17 @@ const drawModeSelector = () => {
     noStroke();
     textSize(height / 6);
     square(width / 2, (7 * height) / 20, height / 3.5, height / 20);
-    text('📷', width / 2, (6.5 * height) / 20);
+    // text('📷', width / 2, (6.5 * height) / 20);
+    image(cameraPict, width / 2, (6.5 * height) / 20, height / 5, height / 5 )
+
 
     stroke(80);
     strokeWeight(height / 200);
     drawingContext.setLineDash([height / 100, height / 100]);
     square(width / 2, (15 * height) / 20, height / 3.5, height / 20);
-    text('📁', width / 2, (14.8 * height) / 20);
+    // text('📁', width / 2, (14.8 * height) / 20);
+    image(fileFolderPict, width / 2, (14.8 * height) / 20, height / 5, height / 5 )
+
   }
   pop();
 };
