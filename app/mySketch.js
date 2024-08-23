@@ -272,6 +272,7 @@ function mouseClicked() {
   } else {
     if (dist(50, height - 50, mouseX, mouseY) < 50) {
       decodeMode = undefined;
+      frameInfo = undefined;
     }
   }
 }
