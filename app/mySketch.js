@@ -24,6 +24,9 @@ let fileFolderPict;
 let cameraPict;
 let housePict;
 let hedgehogPict;
+let handPict;
+
+let handTutorialStartCount = undefined;
 
 function preload() {
   (async () => {
@@ -34,15 +37,15 @@ function preload() {
   })();
 
   // fileFolderPict = loadImage("./images/file_folder_color.svg");
-  fileFolderPict = loadImage("./images/file_folder_3d.png");
+  fileFolderPict = loadImage('./images/file_folder_3d.png');
   // cameraPict = loadImage("./images/camera_color.svg");
-  cameraPict = loadImage("./images/camera_3d.png");
+  cameraPict = loadImage('./images/camera_3d.png');
   // housePict = loadImage("./images/house_color.svg");
-  housePict = loadImage("./images/house_3d.png");
+  housePict = loadImage('./images/house_3d.png');
   // hedgehogPict = loadImage("./images/hedgehog_color.svg");
-  hedgehogPict = loadImage("./images/hedgehog_3d.png");
-  chestnutPict = loadImage("./images/chestnut_3d.png");
-
+  hedgehogPict = loadImage('./images/hedgehog_3d.png');
+  chestnutPict = loadImage('./images/chestnut_3d.png');
+  handPict = loadImage('./images/hand_3d.png');
 }
 
 function setup() {
@@ -73,9 +76,11 @@ function draw() {
     // Draw upper half of screen
     if (decodeMode === decodeModePicture) {
       drawTargetPicture();
+      drawHandTutorial();
     } else if (decodeMode === decodeModeCamera) {
       drawVideoCapture();
       drawGuideLine();
+      drawHandTutorial();
     }
     drawFrame();
 
@@ -83,6 +88,46 @@ function draw() {
     drawDecordTextRegion();
     drawHomeButton();
   }
+}
+
+const drawHandTutorial = () => {
+  if (handTutorialStartCount) {
+    const diffCount = frameCount - handTutorialStartCount;
+    if (diffCount < 150) {
+      push();
+      {
+        fill('#000000AA');
+        noStroke();
+        rect(0, 0, width, height);
+      }
+      pop();
+      const coeff = map(easeInOutQuart(diffCount / 150), 0, 1, 2, 3);
+      push();
+      {
+        noFill();
+        strokeWeight(height / 200);
+        stroke('#a7c957');
+        rect(
+          (4 * width) / 10,
+          (2 * height) / 10,
+          ((2 * coeff - 4) * width) / 10,
+          ((coeff - 2) * height) / 10
+        );
+      }
+      pop();
+      image(
+        handPict,
+        (2.01 * coeff * width) / 10,
+        (1.06 * coeff * height) / 10,
+        height / 20,
+        height / 20
+      );
+    }
+  }
+};
+
+function easeInOutQuart(x) {
+  return x < 0.5 ? 8 * x * x * x * x : 1 - pow(-2 * x + 2, 4) / 2;
 }
 
 const drawTargetPicture = () => {
@@ -191,7 +236,7 @@ const drawHomeButton = () => {
   textAlign(CENTER, CENTER);
   textSize(50);
   // text('🏠', 50, height - 50);
-  image(housePict, 50, height - 50, 50, 50 )
+  image(housePict, 50, height - 50, 50, 50);
 
   pop();
 };
@@ -202,8 +247,8 @@ const drawModeSelector = () => {
     textAlign(CENTER, CENTER);
     textSize(height / 25);
     text("'ZTMY Font' Decorder", width / 2, height / 10);
-    image(hedgehogPict, width / 2 - height / 25 * 6.2, height / 10.4, height / 20, height / 20 )
-    image(hedgehogPict, width / 2 + height / 25 * 6.2, height / 10.4, height / 20, height / 20 )
+    image(hedgehogPict, width / 2 - (height / 25) * 6.2, height / 10.4, height / 20, height / 20);
+    image(hedgehogPict, width / 2 + (height / 25) * 6.2, height / 10.4, height / 20, height / 20);
 
     rectMode(CENTER);
     strokeCap(ROUND);
@@ -212,16 +257,14 @@ const drawModeSelector = () => {
     textSize(height / 6);
     square(width / 2, (7 * height) / 20, height / 3.5, height / 20);
     // text('📷', width / 2, (6.5 * height) / 20);
-    image(cameraPict, width / 2, (6.5 * height) / 20, height / 5, height / 5 )
-
+    image(cameraPict, width / 2, (6.5 * height) / 20, height / 5, height / 5);
 
     stroke(80);
     strokeWeight(height / 200);
     drawingContext.setLineDash([height / 100, height / 100]);
     square(width / 2, (15 * height) / 20, height / 3.5, height / 20);
     // text('📁', width / 2, (14.8 * height) / 20);
-    image(fileFolderPict, width / 2, (14.8 * height) / 20, height / 5, height / 5 )
-
+    image(fileFolderPict, width / 2, (14.8 * height) / 20, height / 5, height / 5);
   }
   pop();
 };
@@ -241,6 +284,10 @@ function handleFile(file) {
       //    console.log(gImg)
       gImg.hide();
       decodeMode = decodeModePicture;
+      if (handTutorialStartCount === undefined) {
+        // First time only
+        handTutorialStartCount = frameCount;
+      }
 
       const gpx = createGraphics(gImg.width, gImg.height);
       gpx.image(gImg, 0, 0);
@@ -260,6 +307,10 @@ function mouseClicked() {
       input.elt.click();
     } else if (mouseY > (3 * height) / 20) {
       decodeMode = decodeModeCamera;
+      if (handTutorialStartCount === undefined) {
+        // First time only
+        handTutorialStartCount = frameCount;
+      }
       const constraints = {
         video: {
           facingMode: 'environment',
@@ -334,7 +385,6 @@ const getRegionRect = () => {
 
 let frameInfoCandidate;
 function touchStarted() {
-
   if (decodeMode !== undefined) {
     if (mouseY < height / 2) {
       // Init
@@ -345,7 +395,6 @@ function touchStarted() {
 }
 
 function touchEnded() {
-
   if (isDrawingFrame) {
     const constrainedMouseX = constrain(mouseX, 2, width - 3);
     const constrainedMouseY = constrain(mouseY, 2, height / 2 - 3);
@@ -370,7 +419,7 @@ function touchEnded() {
     } else {
       frameInfoCandidate = undefined;
     }
-  }else if(isDatGUIChanged){
+  } else if (isDatGUIChanged) {
     isDatGUIChanged = false;
     decode();
   }
