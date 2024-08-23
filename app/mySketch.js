@@ -16,7 +16,7 @@ let isDecoding = false;
 let isDrawingFrame = false;
 let frameInfo = undefined;
 let displayImageInfo = undefined;
-let isClicking = false;
+let isDatGUIChanged = false;
 
 const thresholdVal = 0.12;
 
@@ -235,7 +235,7 @@ function handleFile(file) {
       displayImageInfo = undefined;
     }
 
-    console.log(file);
+    // console.log(file);
     createImg(file.data, '', '', (img) => {
       gImg = img;
       //    console.log(gImg)
@@ -333,7 +333,6 @@ const getRegionRect = () => {
 
 let frameInfoCandidate;
 function touchStarted() {
-    isClicking = true;
 
   if (decodeMode !== undefined) {
     if (mouseY < height / 2) {
@@ -345,7 +344,6 @@ function touchStarted() {
 }
 
 function touchEnded() {
-    isClicking = false;
 
   if (isDrawingFrame) {
     const constrainedMouseX = constrain(mouseX, 2, width - 3);
@@ -371,6 +369,9 @@ function touchEnded() {
     } else {
       frameInfoCandidate = undefined;
     }
+  }else if(isDatGUIChanged){
+    isDatGUIChanged = false;
+    decode();
   }
 }
 

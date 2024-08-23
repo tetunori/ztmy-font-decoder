@@ -30,9 +30,7 @@ const prepareDatGUI = (opt) => {
     .name('黒/白 しきい値')
     .onChange(() => {
       isDrawingFrame = false;
-      if (isClicking === false) {
-        decode();
-      }
+      isDatGUIChanged = true;
     });
   optionFolder.open();
 
