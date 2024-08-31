@@ -363,16 +363,18 @@ const decode = () => {
 
     isDecoding = false;
     decordedText = hiraToKana(ret.data.text);
-    decordedText = deleteUnnecessarySpaces(decordedText);
+    decordedText = manageSpaces(decordedText);
     // console.log(decordedText);
   })();
 };
 
-const deleteUnnecessarySpaces = (targetText) => {
+const manageSpaces = (targetText) => {
   let returnText = targetText;
   [' イ', 'イ '].forEach((e) => {
     returnText = returnText.replaceAll(e, 'イ');
   });
+
+  returnText = returnText.replaceAll(' ', '　');
 
   return returnText;
 };

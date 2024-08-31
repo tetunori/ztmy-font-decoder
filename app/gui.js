@@ -8,6 +8,7 @@ const options = new Object();
 const utilities = {
   Reset: () => {
     initializeSettings();
+    decode();
   },
   GitHub: () => {
     window.open('https://github.com/tetunori/ztmy-font-decoder', '_blank');
