@@ -1,0 +1,526 @@
+** Run Tesseract for Training **
+[C:\work\jTessBoxEditor\tesseract-ocr/tesseract, ztmy.ztmy_mojir.exp0.tif, ztmy.ztmy_mojir.exp0, box.train]
+FAIL!
+APPLY_BOXES: boxfile line 4/、 ((345,3122),(389,3167)): FAILURE! Couldn't find a matching blob
+FAIL!
+APPLY_BOXES: boxfile line 5/。 ((423,3122),(467,3167)): FAILURE! Couldn't find a matching blob
+FAIL!
+APPLY_BOXES: boxfile line 6/イイ ((490,3122),(537,3167)): FAILURE! Couldn't find a matching blob
+APPLY_BOXES:
+   Boxes read from boxfile:      86
+   Boxes failed resegmentation:       3
+   Found 83 good blobs.
+Generated training data for 8 words
+
+** Compute the Character Set **
+[C:\work\jTessBoxEditor\tesseract-ocr/unicharset_extractor, ztmy.ztmy_mojir.exp0.box]
+Extracting unicharset from box file ztmy.ztmy_mojir.exp0.box
+Wrote unicharset file unicharset
+
+[C:\work\jTessBoxEditor\tesseract-ocr/set_unicharset_properties, -U, unicharset, -O, unicharset, --script_dir=C:\Users\tetun\Documents\GitHub\ztmy-font-decoder\experiment\20240831]
+Loaded unicharset of size 88 from file unicharset
+Setting unichar properties
+Setting script properties
+Warning: properties incomplete for index 3 = ？
+Warning: properties incomplete for index 4 = ！
+Writing unicharset to file unicharset
+
+** Shape Clustering **
+[C:\work\jTessBoxEditor\tesseract-ocr/shapeclustering, -F, ztmy.font_properties, -U, unicharset, ztmy.ztmy_mojir.exp0.tr]
+Reading ztmy.ztmy_mojir.exp0.tr ...
+Building master shape table
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82
+Stopped with 0 merged, min dist 0.192090
+Master shape_table:Number of shapes = 83 max unichars = 1 number with multiple unichars = 0
+
+** MF Training **
+[C:\work\jTessBoxEditor\tesseract-ocr/mftraining, -F, ztmy.font_properties, -U, unicharset, -O, ztmy.unicharset, ztmy.ztmy_mojir.exp0.tr]
+Done!
+Read shape table shapetable of 83 shapes
+Reading ztmy.ztmy_mojir.exp0.tr ...
+Warning: no protos/configs for Joined in CreateIntTemplates()
+Warning: no protos/configs for |Broken|0|1 in CreateIntTemplates()
+Warning: no protos/configs for 、 in CreateIntTemplates()
+Warning: no protos/configs for 。 in CreateIntTemplates()
+
+** CN Training **
+[C:\work\jTessBoxEditor\tesseract-ocr/cntraining, ztmy.ztmy_mojir.exp0.tr]
+Reading ztmy.ztmy_mojir.exp0.tr ...
+Clustering ...
+
+Writing normproto ...
+
+Successful rename of inttemp
+Successful rename of pffmtable
+Successful rename of normproto
+Successful rename of shapetable
+** Dictionary Data **
+[C:\work\jTessBoxEditor\tesseract-ocr/wordlist2dawg, ztmy.frequent_words_list, ztmy.freq-dawg, ztmy.unicharset]
+Loading unicharset from 'ztmy.unicharset'
+Reading word list from 'ztmy.frequent_words_list'
+Reducing Trie to SquishedDawg
+Dawg is empty, skip producing the output file
+
+[C:\work\jTessBoxEditor\tesseract-ocr/wordlist2dawg, ztmy.words_list, ztmy.word-dawg, ztmy.unicharset]
+Loading unicharset from 'ztmy.unicharset'
+Reading word list from 'ztmy.words_list'
+Reducing Trie to SquishedDawg
+Dawg is empty, skip producing the output file
+
+** Combine Data Files **
+[C:\work\jTessBoxEditor\tesseract-ocr/combine_tessdata, ztmy.]
+Combining tessdata files
+Output ztmy.traineddata created successfully.
+Version:v5.4.0.20240606
+1:unicharset:size=6758, offset=192
+3:inttemp:size=529920, offset=6950
+4:pffmtable:size=823, offset=536870
+5:normproto:size=10308, offset=537693
+13:shapetable:size=1498, offset=548001
+23:version:size=15, offset=549499
+
+** Moving generated traineddata file to tessdata folder **
+** Training Completed **
+** Run Tesseract for Training **
+[C:\work\jTessBoxEditor\tesseract-ocr/tesseract, ztmy.ztmy_mojir.exp0.tif, ztmy.ztmy_mojir.exp0, box.train]
+FAIL!
+APPLY_BOXES: boxfile line 4/、 ((345,3122),(389,3167)): FAILURE! Couldn't find a matching blob
+FAIL!
+APPLY_BOXES: boxfile line 5/。 ((423,3122),(467,3167)): FAILURE! Couldn't find a matching blob
+FAIL!
+APPLY_BOXES: boxfile line 6/イイ ((490,3122),(537,3167)): FAILURE! Couldn't find a matching blob
+APPLY_BOXES:
+   Boxes read from boxfile:      86
+   Boxes failed resegmentation:       3
+   Found 83 good blobs.
+Generated training data for 8 words
+
+** Compute the Character Set **
+[C:\work\jTessBoxEditor\tesseract-ocr/unicharset_extractor, ztmy.ztmy_mojir.exp0.box]
+Extracting unicharset from box file ztmy.ztmy_mojir.exp0.box
+Wrote unicharset file unicharset
+
+[C:\work\jTessBoxEditor\tesseract-ocr/set_unicharset_properties, -U, unicharset, -O, unicharset, --script_dir=C:\Users\tetun\Documents\GitHub\ztmy-font-decoder\experiment\20240831]
+Loaded unicharset of size 88 from file unicharset
+Setting unichar properties
+Setting script properties
+Warning: properties incomplete for index 3 = ？
+Warning: properties incomplete for index 4 = ！
+Writing unicharset to file unicharset
+
+** Shape Clustering **
+[C:\work\jTessBoxEditor\tesseract-ocr/shapeclustering, -F, ztmy.font_properties, -U, unicharset, ztmy.ztmy_mojir.exp0.tr]
+Reading ztmy.ztmy_mojir.exp0.tr ...
+Building master shape table
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances...
+Stopped with 0 merged, min dist 999.000000
+Computing shape distances... 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73 74 75 76 77 78 79 80 81 82
+Stopped with 0 merged, min dist 0.192090
+Master shape_table:Number of shapes = 83 max unichars = 1 number with multiple unichars = 0
+
+** MF Training **
+[C:\work\jTessBoxEditor\tesseract-ocr/mftraining, -F, ztmy.font_properties, -U, unicharset, -O, ztmy.unicharset, ztmy.ztmy_mojir.exp0.tr]
+Done!
+Read shape table shapetable of 83 shapes
+Reading ztmy.ztmy_mojir.exp0.tr ...
+Warning: no protos/configs for Joined in CreateIntTemplates()
+Warning: no protos/configs for |Broken|0|1 in CreateIntTemplates()
+Warning: no protos/configs for 、 in CreateIntTemplates()
+Warning: no protos/configs for 。 in CreateIntTemplates()
+
+** CN Training **
+[C:\work\jTessBoxEditor\tesseract-ocr/cntraining, ztmy.ztmy_mojir.exp0.tr]
+Reading ztmy.ztmy_mojir.exp0.tr ...
+Clustering ...
+
+Writing normproto ...
+
+Successful rename of inttemp
+Successful rename of pffmtable
+Successful rename of normproto
+Successful rename of shapetable
+** Dictionary Data **
+[C:\work\jTessBoxEditor\tesseract-ocr/wordlist2dawg, ztmy.frequent_words_list, ztmy.freq-dawg, ztmy.unicharset]
+Loading unicharset from 'ztmy.unicharset'
+Reading word list from 'ztmy.frequent_words_list'
+Reducing Trie to SquishedDawg
+Dawg is empty, skip producing the output file
+
+[C:\work\jTessBoxEditor\tesseract-ocr/wordlist2dawg, ztmy.words_list, ztmy.word-dawg, ztmy.unicharset]
+Loading unicharset from 'ztmy.unicharset'
+Reading word list from 'ztmy.words_list'
+Reducing Trie to SquishedDawg
+Dawg is empty, skip producing the output file
+
+** Combine Data Files **
+[C:\work\jTessBoxEditor\tesseract-ocr/combine_tessdata, ztmy.]
+Combining tessdata files
+Output ztmy.traineddata created successfully.
+Version:v5.4.0.20240606
+1:unicharset:size=6758, offset=192
+3:inttemp:size=529920, offset=6950
+4:pffmtable:size=823, offset=536870
+5:normproto:size=10308, offset=537693
+13:shapetable:size=1498, offset=548001
+23:version:size=15, offset=549499
+
+** Moving generated traineddata file to tessdata folder **
+** Training Completed **
