@@ -1,3 +1,4 @@
+// For datGUI
 const gOptions = {
   enableFilter: false,
   threshold: 0.12,
@@ -29,6 +30,7 @@ let handPict;
 let handTutorialStartCount = undefined;
 
 function preload() {
+  // Prepare Tesseract for ZTMY font
   (async () => {
     tessWorker = await Tesseract.createWorker('ztmy', 0, {
       langPath: './tesseract/',
@@ -36,34 +38,37 @@ function preload() {
     });
   })();
 
-  // fileFolderPict = loadImage("./images/file_folder_color.svg");
+  // Prepare images
   fileFolderPict = loadImage('./images/file_folder_3d.png');
-  // cameraPict = loadImage("./images/camera_color.svg");
   cameraPict = loadImage('./images/camera_3d.png');
-  // housePict = loadImage("./images/house_color.svg");
   housePict = loadImage('./images/house_3d.png');
-  // hedgehogPict = loadImage("./images/hedgehog_color.svg");
   hedgehogPict = loadImage('./images/hedgehog_3d.png');
   chestnutPict = loadImage('./images/chestnut_3d.png');
   handPict = loadImage('./images/hand_3d.png');
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight).drop(handleFile);
+  const cvs = createCanvas(windowWidth, windowHeight);
+  cvs.drop(handleFile);
+  cvs.mouseClicked(_mouseClicked); // For Safari.
+
   // Prepare GUI
   prepareDatGUI(gOptions);
+
+  // TODO: try to delete this
   pixelDensity(1);
 
-  strokeWeight(3);
+  // Basic settings
   angleMode(DEGREES);
-
   textFont('Noto Sans JP');
   textAlign(LEFT, TOP);
-  textSize(max(width, height) / 40);
+  textSize(height / 40);
   textWrap(CHAR);
   imageMode(CENTER);
+
+  initializeImage();
+
   input = createFileInput(handleFile);
-  input.position((15 * height) / 20, height / 3.5);
   input.style('display', 'none');
 }
 
@@ -71,24 +76,96 @@ function draw() {
   background(220);
 
   if (decodeMode === undefined) {
+    // Start up screen
     drawModeSelector();
+    drawCopyRight();
   } else {
     // Draw upper half of screen
     if (decodeMode === decodeModePicture) {
       drawTargetPicture();
-      drawHandTutorial();
     } else if (decodeMode === decodeModeCamera) {
       drawVideoCapture();
       drawGuideLine();
-      drawHandTutorial();
     }
+    drawHandTutorial();
+
+    // Draw targer region
     drawFrame();
 
     // Draw lower half of screen
-    drawDecordTextRegion();
+    drawDecordedTextRegion();
     drawHomeButton();
   }
 }
+
+const initializeImage = () => {
+  // Remove the current image, if any.
+  if (gImg) {
+    gImg.remove();
+    frameInfo = undefined;
+    displayImageInfo = undefined;
+  }
+};
+
+// Handle file input
+const handleFile = (file) => {
+  // console.log(file);
+  if (file.type === 'image') {
+    initializeImage();
+
+    createImg(file.data, '', '', (img) => {
+      // console.log(img);
+      gImg = img;
+      gImg.hide();
+      decodeMode = decodeModePicture;
+
+      // Start tutorial count
+      if (handTutorialStartCount === undefined) {
+        // but First time only
+        handTutorialStartCount = frameCount;
+      }
+
+      // For displaying the image
+      const gpx = createGraphics(gImg.width, gImg.height);
+      gpx.image(gImg, 0, 0);
+      if (options.enableFilter) {
+        filter(THRESHOLD, options.threshold);
+      }
+
+      // Start 1st time decord
+      decode();
+    });
+  }
+};
+
+
+const drawModeSelector = () => {
+  push();
+  {
+    textAlign(CENTER, CENTER);
+    textSize(height / 25);
+    text("'ZTMY Font' Decorder", width / 2, height / 10);
+    image(hedgehogPict, width / 2 - (height / 25) * 6.2, height / 10.4, height / 20, height / 20);
+    image(hedgehogPict, width / 2 + (height / 25) * 6.2, height / 10.4, height / 20, height / 20);
+
+    rectMode(CENTER);
+    strokeCap(ROUND);
+
+    noStroke();
+    textSize(height / 6);
+    square(width / 2, (7 * height) / 20, height / 3.5, height / 20);
+    // text('📷', width / 2, (6.5 * height) / 20);
+    image(cameraPict, width / 2, (6.5 * height) / 20, height / 5, height / 5);
+
+    stroke(80);
+    strokeWeight(height / 200);
+    drawingContext.setLineDash([height / 100, height / 100]);
+    square(width / 2, (15 * height) / 20, height / 3.5, height / 20);
+    // text('📁', width / 2, (14.8 * height) / 20);
+    image(fileFolderPict, width / 2, (14.8 * height) / 20, height / 5.5, height / 5.5);
+  }
+  pop();
+};
 
 const drawHandTutorial = () => {
   if (handTutorialStartCount) {
@@ -218,8 +295,11 @@ const drawVideoCapture = () => {
   }
 };
 
-const drawDecordTextRegion = () => {
-  rect(-20, height / 2, width + 20, height / 2 + 20);
+const drawDecordedTextRegion = () => {
+  push();
+  strokeWeight(3);
+  rect(-20, height / 2, width + 30, height / 2 + 30);
+  pop();
   if (isDecoding) {
     push();
     textAlign(CENTER, CENTER);
@@ -241,69 +321,10 @@ const drawHomeButton = () => {
   pop();
 };
 
-const drawModeSelector = () => {
-  push();
-  {
-    textAlign(CENTER, CENTER);
-    textSize(height / 25);
-    text("'ZTMY Font' Decorder", width / 2, height / 10);
-    image(hedgehogPict, width / 2 - (height / 25) * 6.2, height / 10.4, height / 20, height / 20);
-    image(hedgehogPict, width / 2 + (height / 25) * 6.2, height / 10.4, height / 20, height / 20);
 
-    rectMode(CENTER);
-    strokeCap(ROUND);
-
-    noStroke();
-    textSize(height / 6);
-    square(width / 2, (7 * height) / 20, height / 3.5, height / 20);
-    // text('📷', width / 2, (6.5 * height) / 20);
-    image(cameraPict, width / 2, (6.5 * height) / 20, height / 5, height / 5);
-
-    stroke(80);
-    strokeWeight(height / 200);
-    drawingContext.setLineDash([height / 100, height / 100]);
-    square(width / 2, (15 * height) / 20, height / 3.5, height / 20);
-    // text('📁', width / 2, (14.8 * height) / 20);
-    image(fileFolderPict, width / 2, (14.8 * height) / 20, height / 5, height / 5);
-  }
-  pop();
-};
-
-function handleFile(file) {
-  if (file.type === 'image') {
-    // Remove the current image, if any.
-    if (gImg) {
-      gImg.remove();
-      frameInfo = undefined;
-      displayImageInfo = undefined;
-    }
-
-    // console.log(file);
-    createImg(file.data, '', '', (img) => {
-      gImg = img;
-      //    console.log(gImg)
-      gImg.hide();
-      decodeMode = decodeModePicture;
-      if (handTutorialStartCount === undefined) {
-        // First time only
-        handTutorialStartCount = frameCount;
-      }
-
-      const gpx = createGraphics(gImg.width, gImg.height);
-      gpx.image(gImg, 0, 0);
-      if (options.enableFilter) {
-        filter(THRESHOLD, options.threshold);
-      }
-      image(gpx, width / 2, (3 * height) / 4, gpx.width, gpx.height);
-
-      decode();
-    });
-  }
-}
-
-function mouseClicked() {
+const _mouseClicked = () => {
   if (decodeMode === undefined) {
-    if (mouseY > (12 * height) / 20) {
+    if (mouseY > (11 * height) / 20) {
       input.elt.click();
     } else if (mouseY > (3 * height) / 20) {
       decodeMode = decodeModeCamera;
@@ -326,7 +347,7 @@ function mouseClicked() {
       frameInfo = undefined;
     }
   }
-}
+};
 
 // https://qiita.com/mimoe/items/855c112625d39b066c9a
 function hiraToKana(str) {
@@ -360,6 +381,7 @@ const decode = () => {
       recogOptions.rectangle = targetRegionRect;
     }
     const ret = await tessWorker.recognize(recogTarget, recogOptions);
+    // console.log(ret.data.text);
 
     isDecoding = false;
     decordedText = hiraToKana(ret.data.text);
@@ -489,6 +511,7 @@ const drawFrame = () => {
   }
 };
 
+// Draw Guide line for camera mode
 const drawGuideLine = () => {
   push();
   {
@@ -497,6 +520,22 @@ const drawGuideLine = () => {
 
     line(width / 2, 0, width / 2, height / 2);
     line(0, height / 4, width, height / 4);
+  }
+  pop();
+};
+
+// Draw fine print at the bottom of page
+const drawCopyRight = () => {
+  push();
+  {
+    textAlign(LEFT, CENTER);
+    textSize(height / 80);
+    fill(20);
+    text(
+      'Hosted on GitHub. Version 0.8.0. Copyright (c) 2024 Tetsunori Nakayama. MIT License.',
+      20,
+      height - 20
+    );
   }
   pop();
 };
