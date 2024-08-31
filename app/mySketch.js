@@ -6,7 +6,6 @@ const gOptions = {
 
 let tessWorker = undefined;
 let gImg;
-let gCapture;
 let decodeMode = undefined;
 const decodeModePicture = 0;
 const decodeModeCamera = 1;
@@ -81,12 +80,10 @@ function draw() {
     drawCopyRight();
   } else {
     // Draw upper half of screen
-    if (decodeMode === decodeModePicture) {
-      drawTargetPicture();
-    } else if (decodeMode === decodeModeCamera) {
-      drawVideoCapture();
+    if (decodeMode === decodeModeCamera) {
       drawGuideLine();
     }
+    drawTargetPicture();
     drawHandTutorial();
 
     // Draw targer region
@@ -128,9 +125,6 @@ const handleFile = (file) => {
       // For displaying the image
       const gpx = createGraphics(gImg.width, gImg.height);
       gpx.image(gImg, 0, 0);
-      if (options.enableFilter) {
-        filter(THRESHOLD, options.threshold);
-      }
 
       // Start 1st time decord
       decode();
@@ -138,10 +132,11 @@ const handleFile = (file) => {
   }
 };
 
-
+// Initial Screen
 const drawModeSelector = () => {
   push();
   {
+    // Title text
     textAlign(CENTER, CENTER);
     textSize(height / 25);
     text("'ZTMY Font' Decorder", width / 2, height / 10);
@@ -151,26 +146,29 @@ const drawModeSelector = () => {
     rectMode(CENTER);
     strokeCap(ROUND);
 
+    // Camera icon
     noStroke();
     textSize(height / 6);
     square(width / 2, (7 * height) / 20, height / 3.5, height / 20);
-    // text('📷', width / 2, (6.5 * height) / 20);
     image(cameraPict, width / 2, (6.5 * height) / 20, height / 5, height / 5);
 
+    // Folder icon
     stroke(80);
     strokeWeight(height / 200);
     drawingContext.setLineDash([height / 100, height / 100]);
     square(width / 2, (15 * height) / 20, height / 3.5, height / 20);
-    // text('📁', width / 2, (14.8 * height) / 20);
     image(fileFolderPict, width / 2, (14.8 * height) / 20, height / 5.5, height / 5.5);
   }
   pop();
 };
 
+// Draw operational tutorial
 const drawHandTutorial = () => {
   if (handTutorialStartCount) {
+    const tutorialLength = 150;
     const diffCount = frameCount - handTutorialStartCount;
-    if (diffCount < 150) {
+    if (diffCount < tutorialLength) {
+      // black-transparent Background
       push();
       {
         fill('#000000AA');
@@ -178,6 +176,8 @@ const drawHandTutorial = () => {
         rect(0, 0, width, height);
       }
       pop();
+
+      // Frame
       const coeff = map(easeInOutQuart(diffCount / 150), 0, 1, 2, 3);
       push();
       {
@@ -192,6 +192,8 @@ const drawHandTutorial = () => {
         );
       }
       pop();
+
+      // Hand
       image(
         handPict,
         (2.01 * coeff * width) / 10,
@@ -203,9 +205,9 @@ const drawHandTutorial = () => {
   }
 };
 
-function easeInOutQuart(x) {
+const easeInOutQuart = (x) => {
   return x < 0.5 ? 8 * x * x * x * x : 1 - pow(-2 * x + 2, 4) / 2;
-}
+};
 
 const drawTargetPicture = () => {
   if (gImg) {
@@ -233,54 +235,12 @@ const drawTargetPicture = () => {
     // console.log(imageHeight,gImg.height, height/2)
 
     push();
-    translate(width / 2, height / 4);
-    image(gImg, 0, 0, imageWidth, imageHeight);
-    pop();
-    if (options.enableFilter) {
-      filter(THRESHOLD, options.threshold);
+    {
+      translate(width / 2, height / 4);
+      image(gImg, 0, 0, imageWidth, imageHeight);
     }
-
-    displayImageInfo = {
-      x: width / 2 - imageWidth / 2,
-      y: height / 4 - imageHeight / 2,
-      w: imageWidth,
-      h: imageHeight,
-    };
-    // console.log(displayImageInfo)
-  }
-};
-
-const drawVideoCapture = () => {
-  if (gCapture) {
-    gImg = gCapture;
-
-    let imageWidth;
-    let imageHeight;
-    if (gImg.height > gImg.width) {
-      // Portrait
-      imageHeight = min(gImg.height, height / 2);
-      imageWidth = (gImg.width * imageHeight) / gImg.height;
-
-      if (imageWidth > width) {
-        imageHeight = (imageHeight * width) / imageWidth;
-        imageWidth = width;
-      }
-    } else {
-      // Landscape
-      imageWidth = min(gImg.width, width);
-      imageHeight = (gImg.height * imageWidth) / gImg.width;
-
-      if (imageHeight > height / 2) {
-        imageWidth = (imageWidth * height) / 2 / imageHeight;
-        imageHeight = height / 2;
-      }
-    }
-    // console.log(imageHeight,gImg.height, height/2)
-
-    push();
-    translate(width / 2, height / 4);
-    image(gImg, 0, 0, imageWidth, imageHeight);
     pop();
+
     if (options.enableFilter) {
       filter(THRESHOLD, options.threshold);
     }
@@ -297,14 +257,24 @@ const drawVideoCapture = () => {
 
 const drawDecordedTextRegion = () => {
   push();
-  strokeWeight(3);
-  rect(-20, height / 2, width + 30, height / 2 + 30);
+  {
+    strokeWeight(3);
+    rect(-20, height / 2, width + 30, height / 2 + 30);
+  }
   pop();
+
   if (isDecoding) {
     push();
-    textAlign(CENTER, CENTER);
-    textSize(width / 10);
-    text(String.fromCodePoint(0x1f311 + (floor(frameCount / 5) % 8)), width / 2, (3 * height) / 4);
+    {
+      textAlign(CENTER, CENTER);
+      textSize(width / 10);
+      // processing...🌒->🌓->...
+      text(
+        String.fromCodePoint(0x1f311 + (floor(frameCount / 5) % 8)),
+        width / 2,
+        (3 * height) / 4
+      );
+    }
     pop();
   } else {
     text(decordedText, width / 10, height / 2 + height / 10);
@@ -313,35 +283,40 @@ const drawDecordedTextRegion = () => {
 
 const drawHomeButton = () => {
   push();
-  textAlign(CENTER, CENTER);
-  textSize(50);
-  // text('🏠', 50, height - 50);
-  image(housePict, 50, height - 50, 50, 50);
-
+  {
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    image(housePict, 50, height - 50, 50, 50);
+  }
   pop();
 };
-
 
 const _mouseClicked = () => {
   if (decodeMode === undefined) {
     if (mouseY > (11 * height) / 20) {
+      // For picture mode
       input.elt.click();
     } else if (mouseY > (3 * height) / 20) {
+      // For camera mode
       decodeMode = decodeModeCamera;
+
       if (handTutorialStartCount === undefined) {
         // First time only
         handTutorialStartCount = frameCount;
       }
+
       const constraints = {
         video: {
           facingMode: 'environment',
         },
         audio: false,
       };
-      gCapture = createCapture(constraints);
-      gCapture.hide();
+      const cpt = createCapture(constraints);
+      cpt.hide();
+      gImg = cpt;
     }
   } else {
+    // Home button
     if (dist(50, height - 50, mouseX, mouseY) < 50) {
       decodeMode = undefined;
       frameInfo = undefined;
@@ -349,15 +324,12 @@ const _mouseClicked = () => {
   }
 };
 
-// https://qiita.com/mimoe/items/855c112625d39b066c9a
-function hiraToKana(str) {
-  return str.replace(/[\u3041-\u3096]/g, function (match) {
-    var chr = match.charCodeAt(0) + 0x60;
-    return String.fromCharCode(chr);
-  });
-}
-
 const decode = () => {
+
+  if(!gImg){
+    return;
+  }
+
   (async () => {
     isDecoding = true;
     const targetRegionRect = getRegionRect();
@@ -384,8 +356,7 @@ const decode = () => {
     // console.log(ret.data.text);
 
     isDecoding = false;
-    decordedText = hiraToKana(ret.data.text);
-    decordedText = manageSpaces(decordedText);
+    decordedText = manageSpaces(ret.data.text);
     // console.log(decordedText);
   })();
 };
@@ -463,22 +434,6 @@ function touchEnded() {
 }
 
 const drawFrame = () => {
-  if (frameInfo) {
-    const targetRegionRect = getRegionRect();
-    //debug
-    // image(
-    //   gImg,
-    //   width / 2,
-    //   (3 * height) / 4,
-    //   targetRegionRect.width,
-    //   targetRegionRect.height,
-    //   targetRegionRect.left,
-    //   targetRegionRect.top,
-    //   targetRegionRect.width,
-    //   targetRegionRect.height
-    // );
-  }
-
   if (frameInfoCandidate || frameInfo) {
     push();
     {

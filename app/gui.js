@@ -10,6 +10,9 @@ const utilities = {
     initializeSettings();
     decode();
   },
+  Tester: () => {
+    window.open('https://tetunori.github.io/ztmy-font-tester/', '_blank');
+  },
   GitHub: () => {
     window.open('https://github.com/tetunori/ztmy-font-decoder', '_blank');
   },
@@ -36,6 +39,7 @@ const prepareDatGUI = (opt) => {
   optionFolder.open();
 
   gui.add(utilities, 'Reset').name('設定リセット 🐱');
+  gui.add(utilities, 'Tester').name('ZTMY Font Tester 🔗');
   gui.add(utilities, 'GitHub').name('GitHub 🔗');
 
   gui.close();
