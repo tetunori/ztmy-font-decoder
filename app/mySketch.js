@@ -363,17 +363,19 @@ const decode = () => {
 
     isDecoding = false;
     decordedText = hiraToKana(ret.data.text);
-    decordedText = deleteUnnecessarySpaces(decordedText)
+    decordedText = deleteUnnecessarySpaces(decordedText);
     // console.log(decordedText);
   })();
 };
 
-const deleteUnnecessarySpaces = ( targetText ) => {
+const deleteUnnecessarySpaces = (targetText) => {
   let returnText = targetText;
-  returnText = returnText.replaceAll(' イ','イ');
-  returnText = returnText.replaceAll('イ ','イ');
+  [' イ', 'イ '].forEach((e) => {
+    returnText = returnText.replaceAll(e, 'イ');
+  });
+
   return returnText;
-}
+};
 
 const getRegionRect = () => {
   if (gImg && frameInfo && displayImageInfo) {
