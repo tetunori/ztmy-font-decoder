@@ -370,8 +370,11 @@ const decode = () => {
 
 const manageSpaces = (targetText) => {
   let returnText = targetText;
-  [' イ', 'イ '].forEach((e) => {
-    returnText = returnText.replaceAll(e, 'イ');
+
+  ['イ', 'ィ', '！', '？', '、', '。'].forEach((t) => {
+    [' ' + t, t + ' '].forEach((e) => {
+      returnText = returnText.replaceAll(e, t);
+    });
   });
 
   returnText = returnText.replaceAll(' ', '　');
