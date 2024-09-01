@@ -2,8 +2,6 @@
 Version 0.8.0  
 <img src="./images/keyVisual.png" width="640px"/>
 
-！！！書きかけ！！！
-
 # Description🖊️
 ZTMYフォントを解析（簡易OCR）できるツールです。精度はそこそこなので、あまり期待しないで🫠。  
 
