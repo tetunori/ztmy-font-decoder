@@ -1,4 +1,4 @@
-# ZTMY Font Decorder🦔
+# ZTMY Font Decoder🦔
 Version 0.8.0  
 <img src="./images/keyVisual.png" width="640px"/>
 
@@ -9,12 +9,12 @@ ZTMYフォントを解析（簡易OCR）できるツールです。精度はそ�
 
 # Usage🪄
 ## 📷を使って解析する場合
-1. [ztmy-font-decorder](https://tetunori.github.io/ztmy-font-decorder/)にアクセスする。
+1. [ztmy-font-decoder](https://tetunori.github.io/ztmy-font-decoder/)にアクセスする。
 2. 画面上半分の📷アイコンをタップする。
 3. 解析したい部分をタッチで選択すると、画面下半分に解析結果が表示されます。
 
 ## 画像から解析する場合
-1. [ztmy-font-decorder](https://tetunori.github.io/ztmy-font-decorder/)にアクセスする。
+1. [ztmy-font-decoder](https://tetunori.github.io/ztmy-font-decoder/)にアクセスする。
 2. 画面下半分の📁アイコンをタップして、解析する画像を選択します。
 3. 解析したい部分をタッチで選択すると、画面下半分に解析結果が表示されます。
 
