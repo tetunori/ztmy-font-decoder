@@ -11,7 +11,7 @@ const decodeModePicture = 0;
 const decodeModeCamera = 1;
 
 let input;
-let decordedText = '';
+let decodedText = '';
 let isDecoding = false;
 let isDrawingFrame = false;
 let frameInfo = undefined;
@@ -90,7 +90,7 @@ function draw() {
     drawFrame();
 
     // Draw lower half of screen
-    drawDecordedTextRegion();
+    drawDecodedTextRegion();
     drawHomeButton();
   }
 }
@@ -126,7 +126,7 @@ const handleFile = (file) => {
       const gpx = createGraphics(gImg.width, gImg.height);
       gpx.image(gImg, 0, 0);
 
-      // Start 1st time decord
+      // Start 1st time decod
       decode();
     });
   }
@@ -139,7 +139,7 @@ const drawModeSelector = () => {
     // Title text
     textAlign(CENTER, CENTER);
     textSize(height / 25);
-    text("'ZTMY Font' Decorder", width / 2, height / 10);
+    text("'ZTMY Font' Decoder", width / 2, height / 10);
     image(hedgehogPict, width / 2 - (height / 25) * 6.2, height / 10.4, height / 20, height / 20);
     image(hedgehogPict, width / 2 + (height / 25) * 6.2, height / 10.4, height / 20, height / 20);
 
@@ -255,7 +255,7 @@ const drawTargetPicture = () => {
   }
 };
 
-const drawDecordedTextRegion = () => {
+const drawDecodedTextRegion = () => {
   push();
   {
     strokeWeight(3);
@@ -277,7 +277,7 @@ const drawDecordedTextRegion = () => {
     }
     pop();
   } else {
-    text(decordedText, width / 10, height / 2 + height / 10);
+    text(decodedText, width / 10, height / 2 + height / 10);
   }
 };
 
@@ -356,8 +356,8 @@ const decode = () => {
     // console.log(ret.data.text);
 
     isDecoding = false;
-    decordedText = manageSpaces(ret.data.text);
-    // console.log(decordedText);
+    decodedText = manageSpaces(ret.data.text);
+    // console.log(decodedText);
   })();
 };
 
