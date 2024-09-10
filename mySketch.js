@@ -79,12 +79,13 @@ function draw() {
     drawModeSelector();
     drawCopyRight();
   } else {
+    drawTargetPicture();
+    drawHandTutorial();
+
     // Draw upper half of screen
     if (decodeMode === decodeModeCamera) {
       drawGuideLine();
     }
-    drawTargetPicture();
-    drawHandTutorial();
 
     // Draw targer region
     drawFrame();
