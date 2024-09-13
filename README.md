@@ -22,7 +22,7 @@ ZTMYフォントを解析（簡易OCR）できるツールです。精度はそ�
 - [ztmy-font-tester](https://github.com/tetunori/ztmy-font-tester/)への移動
 - GitHub(このページ)への移動
 
-# Article
+# Article📰
 このツールの技術解説記事を[Zennのbook](https://zenn.dev/tetunori/books/20240907-tetunori-tesseract)で公開しています。
 
 # License⚖️
